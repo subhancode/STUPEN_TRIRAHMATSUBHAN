@@ -1,0 +1,114 @@
+{
+  "name": "Tugas 1 - Pengembangan Agen AI tanpa Koding",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! 👋 Selamat datang di Chatbot Informasi Akademik Mahasiswa.\n\nSaya siap membantu kamu mendapatkan informasi seputar kegiatan akademik, seperti:\n\n📚 Perkuliahan — informasi dan hal-hal umum terkait kegiatan belajar.\n📝 Tugas — membantu memahami dan mengelola tugas perkuliahan.\n📖 Ujian — membantu memberikan informasi umum seputar persiapan ujian.\n⏰ Manajemen Waktu Belajar — membantu mengatur waktu dan membuat jadwal belajar.\n🎓 Kegiatan Akademik — membantu menjawab pertanyaan umum terkait aktivitas akademik mahasiswa.\n\nSilakan tuliskan pertanyaan kamu dan saya akan membantu menjawabnya dengan jelas dan mudah dipahami. 😊",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1a6d9721-47b2-44f5-a99a-320cba13f888",
+      "name": "When chat message received",
+      "webhookId": "cb60bf87-1c8d-40bd-9bfc-a32406a41695"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah Chatbot Informasi Akademik Mahasiswa.\n\nTugas utama kamu adalah membantu mahasiswa mendapatkan informasi umum seputar kegiatan akademik, seperti perkuliahan, tugas, ujian, pembelajaran, dan pengelolaan waktu belajar.\n\nJawablah pertanyaan pengguna dengan bahasa Indonesia yang jelas, sopan, ramah, dan mudah dipahami.\n\nJika informasi yang ditanyakan tidak tersedia atau kamu tidak mengetahui jawabannya, jangan mengarang informasi. Sampaikan dengan jujur bahwa informasi tersebut tidak tersedia.\n\nBerikan jawaban yang relevan dengan pertanyaan pengguna dan jangan memberikan informasi yang tidak berhubungan dengan konteks akademik.e a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "53278c11-9972-4b84-802a-eb44c2b1032c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        160
+      ],
+      "id": "7831172e-fecb-43fc-8048-c1745b776ef1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ICUAFoGVbKcMQX7a",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        336,
+        240
+      ],
+      "id": "3a641076-7039-4eee-b9aa-f6e6bd099c86",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "edb028f4-30e1-4f43-87e0-e4242711b1a7",
+  "meta": {
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "QJcSkl3efOootd30",
+  "tags": []
+}

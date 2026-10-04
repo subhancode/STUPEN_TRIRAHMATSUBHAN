@@ -1,0 +1,159 @@
+{
+  "name": "Tugas 2 - Pengembangan Agen AI tanpa Koding",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "af629de7-2ce9-42d7-9174-6198cb8c8e34",
+      "name": "When chat message received",
+      "webhookId": "48d75177-b675-453b-ae9e-6174d7755fe2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah Chatbot Informasi Pelatihan dan Kursus.\n\nTugas utama kamu adalah membantu pengguna mendapatkan informasi mengenai program pelatihan atau kursus yang tersedia berdasarkan data yang diberikan melalui Google Sheets.\n\nKamu dapat membantu pengguna mencari dan menjelaskan informasi seperti jenis atau program pelatihan, nama pelatihan atau kursus, materi atau topik yang dipelajari, serta biaya atau harga pelatihan.\n\nGunakan data dari Google Sheets sebagai sumber informasi utama. Jika pengguna menanyakan nama pelatihan, jenis pelatihan, topik, harga, atau informasi lain yang tersedia di dalam data, berikan jawaban berdasarkan data tersebut.\n\nJika pengguna meminta rekomendasi pelatihan, bantu berdasarkan kebutuhan atau topik yang disebutkan oleh pengguna dan hanya gunakan pilihan yang tersedia pada data. Jangan membuat atau mengarang nama pelatihan, harga, materi, atau informasi lainnya yang tidak terdapat dalam data.\n\nJawablah menggunakan bahasa Indonesia yang jelas, sopan, ramah, dan mudah dipahami. Jika terdapat beberapa pelatihan yang sesuai dengan pertanyaan pengguna, tampilkan informasi yang relevan secara terstruktur agar mudah dibandingkan.\n\nJika informasi yang ditanyakan tidak tersedia dalam data, sampaikan dengan jujur bahwa informasi tersebut tidak tersedia dan jangan memberikan informasi yang dibuat-buat.\n\nFokuskan jawaban pada informasi pelatihan dan kursus yang tersedia dalam data. Jika pertanyaan pengguna tidak berkaitan dengan pelatihan atau kursus, arahkan pengguna untuk menanyakan informasi yang berhubungan dengan program pelatihan yang tersedia."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "fd0f0f4a-6d3a-4c75-9bd3-7340f867c7ff",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        160
+      ],
+      "id": "1ceff7d3-88f7-4aee-8b0b-5defc1187bc1",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ICUAFoGVbKcMQX7a",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        368,
+        160
+      ],
+      "id": "474a7381-13cc-4615-8c21-704030a82811",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1wgBEU07SdXpBCli974NsfosyEF5s3VYhRroQB2mmm7Q",
+          "mode": "list",
+          "cachedResultName": "Copy of n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wgBEU07SdXpBCli974NsfosyEF5s3VYhRroQB2mmm7Q/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1wgBEU07SdXpBCli974NsfosyEF5s3VYhRroQB2mmm7Q/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        160
+      ],
+      "id": "e27e8f13-ba79-455b-8328-5c5002ddc796",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "CPHZPNRQ0yXWPN07",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2c4aacda-775d-4fcb-9213-938d5cd1460c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "JnfwB8hYnXwdUVtl",
+  "tags": []
+}
